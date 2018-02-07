@@ -1,0 +1,6 @@
+[submodule "components/extflash"]
+	path = components/extflash
+	url = https://github.com/lllucius/esp32_extflash
+[submodule "components/littleflash/littlefs"]
+	path = components/littleflash/littlefs
+	url = https://github.com/geky/littlefs.git
