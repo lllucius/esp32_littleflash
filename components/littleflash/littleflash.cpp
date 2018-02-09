@@ -673,8 +673,6 @@ int LittleFlash::readdir_r_p(void *ctx, DIR *pdir, struct dirent *entry, struct 
 
 long LittleFlash::telldir_p(void *ctx, DIR *pdir)
 {
-    LittleFlash *that = (LittleFlash *) ctx;
-
     vfs_lfs_dir_t *vfs_dir = (vfs_lfs_dir_t *) pdir;
     if (vfs_dir == NULL)
     {
@@ -701,24 +699,21 @@ void LittleFlash::seekdir_p(void *ctx, DIR *pdir, long offset)
     // ESP32 VFS expects simple 0 to n counted directory offsets but lfs
     // doesn't so we need to "translate"...
     int err = lfs_dir_rewind(&that->lfs, &vfs_dir->lfs_dir);
-    if (err < 0)
+    if (err >= 0)
     {
-        map_lfs_error(err);
-        return;
-    }
-
-    for (vfs_dir->off = 0; vfs_dir->off < offset; ++vfs_dir->off)
-    {
-        struct lfs_info lfs_info;
-        err = lfs_dir_read(&that->lfs, &vfs_dir->lfs_dir, &lfs_info);
-        if (err < 0)
+        for (vfs_dir->off = 0; vfs_dir->off < offset; ++vfs_dir->off)
         {
-            map_lfs_error(err);
-            return;
+            struct lfs_info lfs_info;
+            err = lfs_dir_read(&that->lfs, &vfs_dir->lfs_dir, &lfs_info);
+            if (err < 0)
+            {
+                break;
+            }
         }
     }
 
     _lock_release(&that->lock);
+
     if (err < 0)
     {
         map_lfs_error(err);
