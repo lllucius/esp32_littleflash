@@ -116,7 +116,6 @@ esp_err_t LittleFlash::init(const little_flash_config_t *config)
     fds = new vfs_fd_t[cfg.open_files];
     if (fds == NULL)
     {
-        lfs_unmount(&lfs);
         return ESP_ERR_NO_MEM;
     }
 
