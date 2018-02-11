@@ -66,6 +66,7 @@ static void test_extflash_setup()
         .speed_mhz = 40,
         .dma_channel = 1,
         .queue_size = 4,
+        .max_dma_size = 0,
         .sector_size = 0,
         .capacity = 0,
     };
